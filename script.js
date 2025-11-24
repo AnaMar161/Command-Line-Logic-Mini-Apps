@@ -1,27 +1,16 @@
 
-<script>
+// Number guessing game script 
 
-    submitForm.addEventListener('submit', e => {
-      e.preventDefault();               // stop page reload
+const numInputEl = document.getElementById('numInput');
+const submitForm = document.getElementById('guessForm') || document.querySelector('form');
+const resultBox = document.getElementById('result') || document.createElement('div');
 
-      const value = Number(numInput.value);
-    });
-   
-// Function to check if a number is between 1 and 100   
-    let inputEl = document.getElementById('numInput');
-// Validate on form submit
-    inputEl.addEventListener('submit', () => {
-    const ok = isBetweenOneAndHundred(inputEl.value);
-     if (ok) {
-    console.log('✅ Value is within 1‑100');
-    // You can clear any error UI here
-  } else {
-    console.warn('❌ Value must be a number between 1 and 100');
-    // Show an error message to the user, e.g.:
+function isBetweenOneAndHundred(val) {
+  const n = Number(val);
+  return Number.isFinite(n) && n >= 1 && n <= 100;
+}
 
-    
-    
-   function randomInt1to100() {
+function randomInt1to100() {
   // Math.random() → [0, 1)
   // Multiply by 100 → [0, 100)
   // Math.floor → integer in [0, 99]
@@ -29,19 +18,23 @@
   return Math.floor(Math.random() * 100) + 1;
 }
 
-/* ------------------- Demo ------------ */
-//console.log('Random number (1‑100):', randomInt1to100());
+submitForm.addEventListener('submit', e => {
+  e.preventDefault(); // stop page reload
 
+  const userGuess = Number(numInputEl && numInputEl.value);
 
- const randomNumber = randomInt(1, 100);
-      const isMatch = (randomNumber === numInput.value);
+  if (!isBetweenOneAndHundred(userGuess)) {
+    resultBox.textContent = 'Please enter a number between 1 and 100';
+    resultBox.classList.remove('hidden');
+    return;
+  }
 
-      // Show the outcome
-      resultBox.textContent = isMatch ? 'True' : 'False';
-      resultBox.classList.remove('hidden');
-      console.log('Random number:', randomNumber, 'User guess:', numInput.value, 'Match:', isMatch);
-    });
+  const randomInt = randomInt1to100();
+  const isMatch = randomInt === userGuess;
 
-
-  </script>
+  // Show the outcome
+  resultBox.textContent = isMatch ? 'True' : 'False';
+  resultBox.classList.remove('hidden');
+  console.log('Random number:', randomInt, 'User guess:', userGuess, 'Match:', isMatch);
+});
 
